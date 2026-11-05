@@ -1,0 +1,6 @@
+{
+  "name": "Enfermería Valoración Móvil",
+  "description": "Herramienta móvil de valoración clínica y registro de enfermería para generación y envío directo de informes formateados por WhatsApp con escalas interactivas, signos vitales y trazados visuales.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

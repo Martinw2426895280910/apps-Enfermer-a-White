@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10243a">
+<title>Enfermería · Valoración</title>
+<style>
+:root{
+  --navy:#10243a;--blue:#1769aa;--blue2:#eaf4fc;--teal:#087f8c;
+  --ink:#182433;--muted:#657487;--line:#dce4ec;--bg:#f3f6fa;
+  --white:#fff;--red:#b42318;--redbg:#fff0ee;--amber:#946200;
+  --amberbg:#fff7df;--green:#167348;--greenbg:#eaf8f0;
+  --shadow:0 5px 18px rgba(16,36,58,.07);--radius:16px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.45}
+header{background:linear-gradient(135deg,#10243a,#174f78);color:#fff;padding:24px 16px 20px}
+.header-inner{max-width:1100px;margin:auto}
+.kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#b9d9f2;font-weight:700}
+h1{font-size:clamp(25px,5vw,36px);line-height:1.1;margin:7px 0}
+header p{margin:7px 0 0;color:#e0edf7}
+main{max-width:1100px;margin:18px auto;padding:0 14px 40px}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 16px}
+button,.btn{border:0;border-radius:12px;padding:12px 15px;font-size:14px;font-weight:700;cursor:pointer;min-height:46px;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+button:active{transform:scale(.97)}
+button:hover{filter:brightness(1.05);box-shadow:0 5px 14px rgba(16,36,58,.16)}
+.primary{background:linear-gradient(135deg,#1769aa,#2389c9);color:#fff}
+.whatsapp{background:linear-gradient(135deg,#128344,#20a85b);color:#fff}
+#generateBtn,#whatsappBtn{animation:pulseGlow 2.4s infinite}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(35,137,201,.28)}50%{box-shadow:0 0 0 7px rgba(35,137,201,0)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+button:focus,input:focus,select:focus,textarea:focus{outline:3px solid rgba(23,105,170,.22);outline-offset:1px}
+.primary{background:var(--blue);color:#fff}.secondary{background:#e5edf5;color:var(--navy)}
+.whatsapp{background:#16864a;color:#fff}.danger{background:#fff0ee;color:#a52b22}
+.toolbar button{flex:1 1 140px}
+.notice{background:#fff8e6;border:1px solid #f0d58b;color:#694d08;padding:12px 14px;border-radius:12px;margin-bottom:16px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:var(--white);border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;min-width:0;transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{box-shadow:0 9px 24px rgba(16,36,58,.11)}
+.grid>.card:nth-child(6n+1){border-top-color:#1769aa}
+.grid>.card:nth-child(6n+2){border-top-color:#0c9388}
+.grid>.card:nth-child(6n+3){border-top-color:#d18a18}
+.grid>.card:nth-child(6n+4){border-top-color:#7955b5}
+.grid>.card:nth-child(6n+5){border-top-color:#d45b72}
+.grid>.card:nth-child(6n){border-top-color:#39834f}
+.card h2{color:var(--navy)}
+.grid>.card:nth-child(6n+1) h2 .num{background:#e8f2ff;color:#1769aa}
+.grid>.card:nth-child(6n+2) h2 .num{background:#e4f7f3;color:#087f72}
+.grid>.card:nth-child(6n+3) h2 .num{background:#fff4dc;color:#a66a00}
+.grid>.card:nth-child(6n+4) h2 .num{background:#f1eaff;color:#7955b5}
+.grid>.card:nth-child(6n+5) h2 .num{background:#ffedf0;color:#bd405c}
+.grid>.card:nth-child(6n) h2 .num{background:#eaf6ec;color:#39834f}
+.card.full{grid-column:1/-1}
+h2{font-size:17px;margin:0 0 14px;color:var(--navy);display:flex;align-items:center;gap:8px}
+h2 .num{background:var(--blue2);color:var(--blue);border-radius:8px;padding:4px 8px;font-size:12px}
+h3{font-size:14px;margin:15px 0 8px;color:var(--navy)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+.bmi-table{width:100%;border-collapse:collapse;font-size:13px}
+.bmi-table th{background:#eaf2fb;color:#183b5b;text-align:left;padding:9px}
+.bmi-table td{padding:8px 9px;border-top:1px solid #e5ebf1}
+.bmi-table tr:nth-child(even){background:#f8fafc}
+.bmi-table tr.active{background:#dff3e7!important;color:#145c38;font-weight:700;outline:2px solid #38a169;outline-offset:-2px}
+.bmi-table tr.active td:last-child:after{content:"  ✓";color:#167348}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.field{min-width:0}
+.field.wide{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:700;color:#445469;margin:0 0 5px}
+input,select,textarea{width:100%;min-width:0;border:1px solid #cbd6e1;border-radius:9px;background:#fff;padding:11px 10px;font:inherit;color:var(--ink)}
+input[type=checkbox],input[type=radio]{width:auto;min-height:auto;accent-color:var(--blue);margin-right:6px}
+textarea{min-height:82px;resize:vertical}
+.inline-checks{display:flex;flex-wrap:wrap;gap:9px 15px}
+.inline-checks label{display:flex;align-items:center;font-size:13px;font-weight:500;margin:0}
+.hint{font-size:11px;color:var(--muted);margin-top:5px}
+.result{margin-top:10px;padding:10px 12px;border-radius:10px;background:#f0f5fa;font-size:13px;color:#29435d}
+.result.good{background:var(--greenbg);color:var(--green)}
+.result.warn{background:var(--amberbg);color:var(--amber)}
+.result.bad{background:var(--redbg);color:var(--red)}
+.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.dynamic-item{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;padding:10px;background:#f5f8fb;border:1px solid var(--line);border-radius:10px;margin:8px 0}
+.dynamic-item .remove{background:#ffe9e6;color:#a52b22;padding:9px 11px;min-height:40px}
+.scale-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.scale-box{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fbfcfe}
+.scale-box strong{display:block;color:var(--navy);margin-bottom:7px;font-size:13px}
+.summary{background:#10243a;color:#fff;border-radius:15px;padding:17px;margin-top:16px}
+.summary h2{color:#fff;margin-bottom:10px}
+.summary pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 Arial,sans-serif;margin:0}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:22px 10px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.hidden{display:none!important}
+@media(max-width:700px){
+  main{padding:0 10px 30px;margin-top:12px}
+  .grid{grid-template-columns:1fr;gap:11px}
+  .card.full{grid-column:auto}
+  .card{padding:14px}
+  .fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .scale-grid{grid-template-columns:1fr}
+  .dynamic-item{grid-template-columns:1fr 1fr}
+  .dynamic-item .remove{grid-column:1/-1}
+  header{padding:21px 14px}
+}
+@media(max-width:380px){
+  .fields{grid-template-columns:1fr}
+  .field.wide{grid-column:auto}
+  .row{grid-template-columns:1fr 1fr}
+}
+@media print{
+  body{background:#fff;font-size:11px}
+  header{background:#fff;color:#000;padding:8px 0;border-bottom:2px solid #123}
+  header p,.kicker{color:#333}
+  main{max-width:none;padding:0;margin:8px 0}
+  .toolbar,.notice button,.remove,footer{display:none!important}
+  .card{box-shadow:none;break-inside:avoid;padding:10px}
+  .grid{gap:7px}
+  input,select,textarea{border:0;border-bottom:1px solid #aaa;padding:4px}
+  .summary{background:#fff;color:#000;border:1px solid #333}
+  .summary h2{color:#000}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="header-inner">
+  <div class="kicker">Registro clínico · herramienta educativa</div>
+  <h1>Enfermería · Valoración</h1>
+  <p>Evaluación integral y registro de datos del paciente</p>
+ </div>
+</header>
+<main>
+ <div class="toolbar">
+  <button class="primary" type="button" id="generateBtn">Generar informe</button>
+  <button class="whatsapp" type="button" id="whatsappBtn">Compartir por WhatsApp</button>
+  <button class="secondary" type="button" id="copyBtn">Copiar informe</button>
+  <button class="secondary" type="button" onclick="window.print()">Imprimir / PDF</button>
+  <button class="danger" type="button" id="resetBtn">Limpiar formulario</button>
+ </div>
+ <div class="notice"><strong>Importante:</strong> herramienta de apoyo para el registro. Los rangos son orientativos y deben interpretarse según edad, antecedentes, contexto clínico y protocolo institucional. No reemplaza la valoración profesional ni permite establecer diagnósticos por sí sola.</div>
+
+ <div class="grid">
+  <section class="card">
+   <h2><span class="num">01</span> Identificación del paciente</h2>
+   <div class="fields">
+    <div class="field wide"><label for="patient">Nombre y apellido</label><input id="patient" placeholder="Nombre del paciente"></div>
+    <div class="field"><label for="document">DNI / Historia clínica</label><input id="document" placeholder="Número"></div>
+    <div class="field"><label for="date">Fecha y hora</label><input id="date" type="datetime-local"></div>
+    <div class="field"><label for="age">Edad (años)</label><input id="age" type="number" min="0" max="120" inputmode="decimal"></div>
+    <div class="field"><label for="sex">Sexo registrado</label><select id="sex"><option value="">Seleccionar</option><option>Femenino</option><option>Masculino</option><option>Otro / no consignado</option></select></div>
+    <div class="field"><label for="group">Grupo etario</label><select id="group"><option value="adult">Adulto</option><option value="older">Adulto mayor</option><option value="child">Pediátrico</option><option value="infant">Lactante</option></select></div>
+    <div class="field"><label for="bed">Sala / habitación / cama</label><input id="bed" placeholder="Ubicación"></div>
+    <div class="field wide"><label for="reason">Motivo de consulta / ingreso</label><textarea id="reason" placeholder="Describir motivo..."></textarea></div>
+    <div class="field wide"><label for="history">Antecedentes relevantes / alergias</label><textarea id="history" placeholder="Antecedentes, medicación habitual, alergias..."></textarea></div>
+   </div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">02</span> Antropometría</h2>
+   <div class="fields">
+    <div class="field"><label for="weight">Peso corporal (kg)</label><input id="weight" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="Ej.: 70,5"></div>
+    <div class="field"><label for="height">Estatura / talla (cm)</label><input id="height" type="number" min="1" step="0.1" inputmode="decimal" placeholder="Ej.: 175"></div>
+    <div class="field"><label for="waist">Perímetro abdominal (cm)</label><input id="waist" type="number" min="0" step="0.1"></div>
+    <div class="field"><label for="head">Perímetro cefálico (cm)</label><input id="head" type="number" min="0" step="0.1"></div>
+   </div>
+   <div id="bmiResult" class="result">Ingrese peso en kilogramos y estatura en centímetros. Fórmula: IMC = peso (kg) ÷ [estatura (m)]².</div>
+   <div class="hint"><strong>Unidades:</strong> el peso se ingresa en kg y la talla en cm. El sistema convierte cm a metros antes de elevar al cuadrado. Ejemplo: 70 kg ÷ (1,75 m × 1,75 m) = 22,86 kg/m².</div>
+   <h3>Clasificación del IMC en adultos (18 años o más)</h3>
+   <div class="table-wrap">
+    <table class="bmi-table" aria-label="Clasificación del índice de masa corporal en adultos">
+     <thead><tr><th>IMC (kg/m²)</th><th>Clasificación</th></tr></thead>
+     <tbody id="bmiClassRows">
+      <tr data-bmi="severe"><td>Menor de 16,0</td><td>Delgadez severa</td></tr>
+      <tr data-bmi="moderate"><td>16,0–16,9</td><td>Delgadez moderada</td></tr>
+      <tr data-bmi="mild"><td>17,0–18,4</td><td>Delgadez leve</td></tr>
+      <tr data-bmi="normal"><td>18,5–24,9</td><td>Intervalo normal</td></tr>
+      <tr data-bmi="over"><td>25,0–29,9</td><td>Sobrepeso</td></tr>
+      <tr data-bmi="ob1"><td>30,0–34,9</td><td>Obesidad clase I</td></tr>
+      <tr data-bmi="ob2"><td>35,0–39,9</td><td>Obesidad clase II</td></tr>
+      <tr data-bmi="ob3"><td>40,0 o más</td><td>Obesidad clase III</td></tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="hint">La clasificación adulta es orientativa: el IMC es una herramienta de cribado, no mide directamente la grasa corporal ni reemplaza la evaluación clínica. En menores de 18 años se utilizan curvas de IMC para edad y sexo (puntaje Z); no se aplican estos cortes.</div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">03</span> Signos vitales</h2>
+   <div class="fields">
+    <div class="field"><label for="temperature">Temperatura (°C)</label><input id="temperature" type="number" step="0.1" placeholder="36.5"></div>
+    <div class="field"><label for="hr">Frecuencia cardíaca (lpm)</label><input id="hr" type="number" min="0"></div>
+    <div class="field"><label for="rr">Frecuencia respiratoria (rpm)</label><input id="rr" type="number" min="0"></div>
+    <div class="field"><label for="systolic">Presión sistólica (mmHg)</label><input id="systolic" type="number" min="0"></div>
+    <div class="field"><label for="diastolic">Presión diastólica (mmHg)</label><input id="diastolic" type="number" min="0"></div>
+    <div class="field"><label for="spo2">Saturación O₂ (%)</label><input id="spo2" type="number" min="0" max="100"></div>
+    <div class="field"><label for="glucose">Glucemia (mg/dL)</label><input id="glucose" type="number" min="0"></div>
+    <div class="field"><label for="oxygen">Oxigenoterapia</label><select id="oxygen"><option>No</option><option>Sí - cánula nasal</option><option>Sí - máscara</option><option>Sí - otro dispositivo</option></select></div>
+   </div>
+   <div id="vitalResult" class="result">Complete los signos vitales para visualizar observaciones orientativas.</div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">04</span> Valoración neurológica</h2>
+   <div class="fields">
+    <div class="field"><label for="conscious">Estado de conciencia</label><select id="conscious"><option value="">Seleccionar</option><option>Alerta</option><option>Somnoliento</option><option>Obnubilado</option><option>Estuporoso</option><option>Comatoso</option></select></div>
+    <div class="field"><label for="orientation">Orientación</label><select id="orientation"><option value="">Seleccionar</option><option>Orientado en persona, tiempo y espacio</option><option>Desorientado parcialmente</option><option>Desorientado globalmente</option><option>No valorable</option></select></div>
+    <div class="field"><label for="pupils">Pupilas</label><select id="pupils"><option value="">Seleccionar</option><option>Isocóricas y reactivas</option><option>Anisocóricas</option><option>Mióticas</option><option>Midriáticas</option><option>No reactivas</option><option>No valoradas</option></select></div>
+    <div class="field"><label for="motor">Respuesta motora / movilidad</label><select id="motor"><option value="">Seleccionar</option><option>Conservada</option><option>Debilidad</option><option>Hemiparesia</option><option>Parálisis</option><option>No valorable</option></select></div>
+   </div>
+   <h3>Escala de Glasgow</h3>
+   <div class="fields">
+    <div class="field"><label for="glasgowEye">Apertura ocular (1–4)</label><select id="glasgowEye"><option value="">Sin valorar</option><option value="4">4 - Espontánea</option><option value="3">3 - A la voz</option><option value="2">2 - Al dolor</option><option value="1">1 - Ninguna</option></select></div>
+    <div class="field"><label for="glasgowVerbal">Respuesta verbal (1–5)</label><select id="glasgowVerbal"><option value="">Sin valorar</option><option value="5">5 - Orientada</option><option value="4">4 - Confusa</option><option value="3">3 - Palabras inapropiadas</option><option value="2">2 - Sonidos incomprensibles</option><option value="1">1 - Ninguna</option></select></div>
+    <div class="field"><label for="glasgowMotor">Respuesta motora (1–6)</label><select id="glasgowMotor"><option value="">Sin valorar</option><option value="6">6 - Obedece órdenes</option><option value="5">5 - Localiza dolor</option><option value="4">4 - Retira al dolor</option><option value="3">3 - Flexión anormal</option><option value="2">2 - Extensión anormal</option><option value="1">1 - Ninguna</option></select></div>
+   </div>
+   <div id="glasgowResult" class="result">Glasgow: pendiente de valoración.</div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">05</span> Valoración respiratoria</h2>
+   <div class="fields">
+    <div class="field"><label for="breathing">Patrón respiratorio</label><select id="breathing"><option value="">Seleccionar</option><option>Eupneico</option><option>Taquipneico</option><option>Bradipneico</option><option>Disneico</option><option>Apneico</option><option>Irregular</option></select></div>
+    <div class="field"><label for="breathSounds">Ruidos respiratorios</label><select id="breathSounds"><option value="">Seleccionar</option><option>Murmullo vesicular conservado</option><option>Disminuidos</option><option>Crepitantes</option><option>Sibilancias</option><option>Roncus</option><option>Otros / no valorados</option></select></div>
+    <div class="field"><label for="cough">Tos / secreciones</label><select id="cough"><option value="">Seleccionar</option><option>Sin tos</option><option>Tos seca</option><option>Tos productiva</option><option>Secreciones abundantes</option></select></div>
+    <div class="field"><label for="cyanosis">Cianosis</label><select id="cyanosis"><option value="">Seleccionar</option><option>No</option><option>Periférica</option><option>Central</option></select></div>
+    <div class="field wide"><label for="respNotes">Observaciones respiratorias</label><textarea id="respNotes"></textarea></div>
+   </div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">06</span> Valoración cardiovascular</h2>
+   <div class="fields">
+    <div class="field"><label for="pulse">Pulso periférico</label><select id="pulse"><option value="">Seleccionar</option><option>Regular y palpable</option><option>Débil</option><option> filiforme</option><option>Irregular</option><option>Ausente</option></select></div>
+    <div class="field"><label for="capillary">Relleno capilar</label><select id="capillary"><option value="">Seleccionar</option><option>≤ 2 segundos</option><option>> 2 segundos</option><option>No valorado</option></select></div>
+    <div class="field"><label for="edema">Edemas</label><select id="edema"><option value="">Seleccionar</option><option>Ausentes</option><option>Miembros inferiores</option><option>Generalizados</option><option>Unilateral</option></select></div>
+    <div class="field"><label for="skinColor">Coloración de piel</label><select id="skinColor"><option value="">Seleccionar</option><option>Normocoloreada</option><option>Pálida</option><option>Ruborizada</option><option>J subictérica / ictérica</option><option>Marmórea</option></select></div>
+    <div class="field wide"><label for="cardioNotes">Observaciones cardiovasculares</label><textarea id="cardioNotes"></textarea></div>
+   </div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">07</span> Balance hídrico y eliminación</h2>
+   <div class="fields">
+    <div class="field"><label for="oralIntake">Ingesta oral (mL)</label><input id="oralIntake" type="number" min="0"></div>
+    <div class="field"><label for="ivIntake">Aportes IV (mL)</label><input id="ivIntake" type="number" min="0"></div>
+    <div class="field"><label for="urine">Diuresis (mL)</label><input id="urine" type="number" min="0"></div>
+    <div class="field"><label for="otherLoss">Otras pérdidas (mL)</label><input id="otherLoss" type="number" min="0"></div>
+    <div class="field"><label for="urineAspect">Características de orina</label><select id="urineAspect"><option value="">Seleccionar</option><option>Clara</option><option>Concentrada</option><option>Hemática</option><option>Colúrica</option><option>Turbia</option><option>No valorada</option></select></div>
+    <div class="field"><label for="bowel">Evacuación intestinal</label><select id="bowel"><option value="">Seleccionar</option><option>Conservada</option><option>Constipación</option><option>Diarrea</option><option>Incontinencia</option><option>No registrada</option></select></div>
+    <div class="field wide"><label for="eliminationNotes">Otros datos (sonda, ostomía, drenajes, etc.)</label><textarea id="eliminationNotes"></textarea></div>
+   </div>
+   <div id="balanceResult" class="result">Balance hídrico: pendiente de datos.</div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">08</span> Nutrición y dolor</h2>
+   <div class="fields">
+    <div class="field"><label for="diet">Tipo de alimentación</label><select id="diet"><option value="">Seleccionar</option><option>Oral habitual</option><option>Hiposódica</option><option>Diabética</option><option>Enteral</option><option>Parenteral</option><option>Ayuno</option><option>Otra</option></select></div>
+    <div class="field"><label for="appetite">Apetito / tolerancia</label><select id="appetite"><option value="">Seleccionar</option><option>Conservado</option><option>Disminuido</option><option>Intolerancia / vómitos</option><option>No valorable</option></select></div>
+    <div class="field"><label for="pain">Dolor EVA (0–10)</label><input id="pain" type="number" min="0" max="10" step="1"></div>
+    <div class="field"><label for="painSite">Localización del dolor</label><input id="painSite" placeholder="Localización"></div>
+    <div class="field wide"><label for="painNotes">Características / factores que modifican el dolor</label><textarea id="painNotes"></textarea></div>
+   </div>
+   <div id="painResult" class="result">EVA: pendiente.</div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">09</span> Piel, heridas y riesgo de lesiones</h2>
+   <div class="fields">
+    <div class="field"><label for="skin">Estado de la piel</label><select id="skin"><option value="">Seleccionar</option><option>Íntegra</option><option>Seca</option><option>Húmeda</option><option>Frágil</option><option>Lesionada</option></select></div>
+    <div class="field"><label for="wound">Heridas / lesiones</label><select id="wound"><option value="">Seleccionar</option><option>No</option><option>Sí - describir</option></select></div>
+    <div class="field wide"><label for="woundNotes">Ubicación, tamaño, aspecto, exudado y cuidados</label><textarea id="woundNotes"></textarea></div>
+   </div>
+   <h3>Escala de Braden (registrar puntajes)</h3>
+   <div class="fields">
+    <div class="field"><label for="bradenSensory">Percepción sensorial (1–4)</label><select id="bradenSensory"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+    <div class="field"><label for="bradenMoisture">Humedad (1–4)</label><select id="bradenMoisture"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+    <div class="field"><label for="bradenActivity">Actividad (1–4)</label><select id="bradenActivity"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+    <div class="field"><label for="bradenMobility">Movilidad (1–4)</label><select id="bradenMobility"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+    <div class="field"><label for="bradenNutrition">Nutrición (1–4)</label><select id="bradenNutrition"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+    <div class="field"><label for="bradenFriction">Fricción / cizalla (1–3)</label><select id="bradenFriction"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div>
+   </div>
+   <div id="bradenResult" class="result">Braden: pendiente de completar.</div>
+  </section>
+
+  <section class="card">
+   <h2><span class="num">10</span> Movilidad y riesgo de caídas</h2>
+   <div class="fields">
+    <div class="field"><label for="mobility">Movilidad funcional</label><select id="mobility"><option value="">Seleccionar</option><option>Independiente</option><option>Con ayuda parcial</option><option>Dependiente</option><option>En cama</option></select></div>
+    <div class="field"><label for="aid">Ayuda técnica</label><select id="aid"><option value="">Seleccionar</option><option>Ninguna</option><option>Bastón</option><option>Andador</option><option>Silla de ruedas</option><option>Otra</option></select></div>
+    <div class="field wide"><label>Factores de riesgo observados</label>
+     <div class="inline-checks">
+      <label><input type="checkbox" class="fallfactor" value="Caída previa">Caída previa</label>
+      <label><input type="checkbox" class="fallfactor" value="Alteración de marcha">Alteración de marcha</label>
+      <label><input type="checkbox" class="fallfactor" value="Confusión">Confusión</label>
+      <label><input type="checkbox" class="fallfactor" value="Déficit sensorial">Déficit sensorial</label>
+      <label><input type="checkbox" class="fallfactor" value="Medicación de riesgo">Medicación de riesgo</label>
+      <label><input type="checkbox" class="fallfactor" value="Necesita asistencia">Necesita asistencia</label>
+     </div>
+    </div>
+   </div>
+   <div id="fallResult" class="result">Registre factores observados. Esta lista no equivale a una escala validada completa.</div>
+  </section>
+
+  <section class="card full">
+   <h2><span class="num">11</span> Medicación administrada / indicada</h2>
+   <div id="medications"></div>
+   <button type="button" class="secondary" id="addMedication">+ Agregar medicación</button>
+   <div class="hint">Registrar fármaco, dosis, vía y horario. Verificar prescripción, alergias, identificación y los correctos de administración.</div>
+  </section>
+
+  <section class="card full">
+   <h2><span class="num">12</span> Laboratorio y estudios complementarios</h2>
+   <div id="labs"></div>
+   <button type="button" class="secondary" id="addLab">+ Agregar resultado</button>
+   <div class="hint">Consignar unidad, fecha y rango de referencia del laboratorio informante. Los intervalos varían según método, edad, sexo y población.</div>
+  </section>
+
+  <section class="card full">
+   <h2><span class="num">13</span> Evolución, cuidados y observaciones</h2>
+   <div class="fields">
+    <div class="field wide"><label for="evolution">Evolución / valoración de enfermería</label><textarea id="evolution" rows="5" placeholder="Describir hallazgos objetivos, intervenciones y respuesta..."></textarea></div>
+    <div class="field wide"><label for="carePlan">Cuidados / intervenciones realizadas o planificadas</label><textarea id="carePlan" rows="4"></textarea></div>
+    <div class="field"><label for="professional">Profesional / responsable</label><input id="professional" placeholder="Nombre y matrícula"></div>
+    <div class="field"><label for="institution">Institución / servicio</label><input id="institution" placeholder="Institución"></div>
+   </div>
+  </section>
+ </div>
+
+ <section class="summary" id="reportSection">
+  <h2>Informe generado</h2>
+  <pre id="report">Complete los datos y presione “Generar informe”.</pre>
+ </section>
+ <footer>Herramienta diseñada para apoyo educativo y registro · Bioq. Dr. A. M. W.</footer>
+</main>
+
+<script>
+(function(){
+ "use strict";
+ const $ = id => document.getElementById(id);
+ const value = id => ($(id) && $(id).value.trim()) || "";
+ const num = id => value(id)==="" ? null : Number(value(id));
+ const safe = v => (v===null || v===undefined || v==="") ? "No consignado" : String(v);
+ const setResult = (id,text,kind="") => { const el=$(id); el.textContent=text; el.className="result"+(kind?" "+kind:""); };
+ const nowLocal = () => { const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,16); };
+ if ($("date")) $("date").value=nowLocal();
+
+ function calculateBMI(){
+  const w=num("weight"), hCm=num("height"), age=num("age");
+  document.querySelectorAll("#bmiClassRows tr").forEach(row=>row.classList.remove("active"));
+  if(w===null || hCm===null){
+   setResult("bmiResult","Ingrese peso en kg y estatura en cm para calcular el IMC. Fórmula: kg ÷ m².");
+   return;
+  }
+  if(w<=0 || hCm<=0 || hCm>260 || w>500){
+   setResult("bmiResult","Verifique los datos: el peso debe ser mayor que 0 kg y la estatura debe ingresarse en centímetros (valor razonable).","warn");
+   return;
+  }
+  const hM=hCm/100;
+  const bmi=w/(hM*hM);
+  if(!Number.isFinite(bmi)){
+   setResult("bmiResult","No fue posible calcular el IMC. Revise peso y estatura.","warn");
+   return;
+  }
+  const base="IMC = "+w.toFixed(1)+" kg ÷ ("+hM.toFixed(2)+" m)² = "+bmi.toFixed(2)+" kg/m².";
+  if(age!==null && age<18){
+   setResult("bmiResult",base+" En menores de 18 años no corresponde aplicar la tabla adulta: interpretar con curvas OMS de IMC para edad y sexo (puntaje Z).","warn");
+   return;
+  }
+  let key,cat;
+  if(bmi<16){key="severe";cat="Delgadez severa";}
+  else if(bmi<17){key="moderate";cat="Delgadez moderada";}
+  else if(bmi<18.5){key="mild";cat="Delgadez leve";}
+  else if(bmi<25){key="normal";cat="Intervalo normal";}
+  else if(bmi<30){key="over";cat="Sobrepeso";}
+  else if(bmi<35){key="ob1";cat="Obesidad clase I";}
+  else if(bmi<40){key="ob2";cat="Obesidad clase II";}
+  else{key="ob3";cat="Obesidad clase III";}
+  const row=document.querySelector('#bmiClassRows tr[data-bmi="'+key+'"]');
+  if(row)row.classList.add("active");
+  setResult("bmiResult",base+" Clasificación: "+cat+". La fila correspondiente está resaltada en la tabla.",key==="normal"?"good":(bmi<18.5||bmi>=30?"warn":""));
+ }
+ function calculateVitals(){
+  const t=num("temperature"),hr=num("hr"),rr=num("rr"),sbp=num("systolic"),dbp=num("diastolic"),sp=num("spo2"),glu=num("glucose");
+  const notes=[];
+  if(t!==null){if(t>=38)notes.push("Temperatura elevada (≥38 °C)");else if(t<35)notes.push("Temperatura baja (<35 °C)");}
+  if(sp!==null && sp<92)notes.push("Saturación menor de 92%: verificar señal, contexto y protocolo; requiere valoración clínica.");
+  if(sbp!==null && sbp<90)notes.push("Presión sistólica menor de 90 mmHg: valorar de inmediato según contexto.");
+  if(sbp!==null && sbp>=180)notes.push("Presión sistólica ≥180 mmHg: repetir correctamente y activar evaluación según protocolo.");
+  if(dbp!==null && dbp>=120)notes.push("Presión diastólica ≥120 mmHg: requiere evaluación clínica urgente según contexto.");
+  if(hr!==null && (hr<50||hr>120))notes.push("Frecuencia cardíaca fuera del intervalo adulto orientativo 50–120 lpm.");
+  if(rr!==null && (rr<10||rr>24))notes.push("Frecuencia respiratoria fuera del intervalo adulto orientativo 10–24 rpm.");
+  if(glu!==null && glu<70)notes.push("Glucemia menor de 70 mg/dL: evaluar hipoglucemia y actuar según protocolo.");
+  if(glu!==null && glu>=250)notes.push("Glucemia ≥250 mg/dL: interpretar con clínica y protocolo.");
+  const age=num("age");
+  const disclaimer=(age!==null&&age<18)?" En pediatría los rangos dependen de la edad exacta.":" Rangos orientativos, no diagnósticos.";
+  setResult("vitalResult",notes.length?notes.join(" · ")+disclaimer:"Sin alertas automáticas con los datos ingresados. Esto no descarta alteraciones.",notes.some(x=>x.includes("urgente")||x.includes("inmediato")||x.includes("menor de 70"))?"warn":"");
+ }
+ function calculateGlasgow(){
+  const e=num("glasgowEye"),v=num("glasgowVerbal"),m=num("glasgowMotor");
+  if(e===null||v===null||m===null){setResult("glasgowResult","Glasgow: pendiente de completar los tres componentes.");return;}
+  const total=e+v+m;
+  const label=total<=8?"Compromiso grave (3–8)":total<=12?"Compromiso moderado (9–12)":"Compromiso leve (13–15)";
+  setResult("glasgowResult","Glasgow: "+total+"/15. "+label+". Registrar también cada componente (O"+e+" V"+v+" M"+m+").",total<=8?"bad":"");
+ }
+ function calculateBalance(){
+  const vals=["oralIntake","ivIntake","urine","otherLoss"].map(num);
+  if(vals.every(x=>x===null)){setResult("balanceResult","Balance hídrico: pendiente de datos.");return;}
+  const input=(vals[0]||0)+(vals[1]||0),output=(vals[2]||0)+(vals[3]||0),bal=input-output;
+  setResult("balanceResult","Ingresos: "+input+" mL · Egresos: "+output+" mL · Balance neto: "+(bal>0?"+":"")+bal+" mL. Registrar período de medición.",bal<0?"warn":"");
+ }
+ function calculatePain(){
+  const p=num("pain"); if(p===null){setResult("painResult","EVA: pendiente.");return;}
+  setResult("painResult","EVA "+p+"/10 · "+(p===0?"Sin dolor referido":p<=3?"Dolor leve":p<=6?"Dolor moderado":"Dolor intenso")+". Escala subjetiva; considerar edad y capacidad de comunicación.",p>=7?"warn":"");
+ }
+ function calculateBraden(){
+  const ids=["bradenSensory","bradenMoisture","bradenActivity","bradenMobility","bradenNutrition","bradenFriction"];
+  const vals=ids.map(num);
+  if(vals.some(x=>x===null)){setResult("bradenResult","Braden: complete los seis dominios para calcular el total.");return;}
+  const total=vals.reduce((a,b)=>a+b,0);
+  let risk=total<=9?"Riesgo muy alto":total<=12?"Riesgo alto":total<=14?"Riesgo moderado":total<=18?"Riesgo bajo":"Riesgo mínimo / sin riesgo según punto de corte institucional";
+  setResult("bradenResult","Puntaje Braden: "+total+"/23 · "+risk+". Aplicar medidas preventivas según evaluación y protocolo.",total<=12?"warn":"");
+ }
+ function calculateFalls(){
+  const selected=[...document.querySelectorAll(".fallfactor:checked")].map(x=>x.value);
+  setResult("fallResult","Factores registrados ("+selected.length+"): "+(selected.join(", ")||"ninguno marcado")+". Lista de apoyo, no constituye la escala Downton completa ni sustituye la evaluación institucional.",selected.length>=2?"warn":"");
+ }
+ function addDynamic(container,kind){
+  const wrap=document.createElement("div");wrap.className="dynamic-item";
+  if(kind==="med"){
+   wrap.innerHTML='<div class="field"><label>Medicamento</label><input data-med="name" placeholder="Fármaco"></div><div class="field"><label>Dosis / vía / horario</label><input data-med="dose" placeholder="Ej.: 500 mg VO c/8 h"></div><button type="button" class="remove" aria-label="Quitar">Quitar</button>';
+  }else{
+   wrap.innerHTML='<div class="field"><label>Estudio / analito</label><input data-lab="name" placeholder="Ej.: Hemoglobina"></div><div class="field"><label>Resultado / unidad</label><input data-lab="result" placeholder="Ej.: 13,5 g/dL"></div><div class="field"><label>Fecha / referencia</label><input data-lab="ref" placeholder="Fecha o rango"></div><button type="button" class="remove" aria-label="Quitar">Quitar</button>';
+  }
+  wrap.querySelector(".remove").addEventListener("click",()=>wrap.remove());
+  $(container).appendChild(wrap);
+ }
+ $("addMedication").addEventListener("click",()=>addDynamic("medications","med"));
+ $("addLab").addEventListener("click",()=>addDynamic("labs","lab"));
+ addDynamic("medications","med");addDynamic("labs","lab");
+
+ ["weight","height","age"].forEach(id=>$(id).addEventListener("input",calculateBMI));
+ ["temperature","hr","rr","systolic","diastolic","spo2","glucose","age"].forEach(id=>$(id).addEventListener("input",calculateVitals));
+ ["glasgowEye","glasgowVerbal","glasgowMotor"].forEach(id=>$(id).addEventListener("change",calculateGlasgow));
+ ["oralIntake","ivIntake","urine","otherLoss"].forEach(id=>$(id).addEventListener("input",calculateBalance));
+ $("pain").addEventListener("input",calculatePain);
+ ["bradenSensory","bradenMoisture","bradenActivity","bradenMobility","bradenNutrition","bradenFriction"].forEach(id=>$(id).addEventListener("change",calculateBraden));
+ document.querySelectorAll(".fallfactor").forEach(el=>el.addEventListener("change",calculateFalls));
+
+ function checkedText(selector){return [...document.querySelectorAll(selector+":checked")].map(x=>x.value).join(", ")||"Ninguno consignado";}
+ function dynamicText(container,selector,keys){
+  return [...$(container).querySelectorAll(".dynamic-item")].map((item,i)=>{
+   const vals=keys.map(k=>item.querySelector("["+selector+"='"+k+"']")?.value.trim()||"");
+   return vals.some(Boolean)?(i+1)+". "+vals.filter(Boolean).join(" | "):"";
+  }).filter(Boolean).join("\n")||"Sin registros";
+ }
+ function makeReport(){
+  calculateBMI();calculateVitals();calculateGlasgow();calculateBalance();calculatePain();calculateBraden();calculateFalls();
+  const g=[value("glasgowEye"),value("glasgowVerbal"),value("glasgowMotor")];
+  const glasgow=g.every(Boolean)?g.reduce((a,b)=>a+Number(b),0)+"/15 (O"+g[0]+" V"+g[1]+" M"+g[2]+")":"No completado";
+  const bradenIds=["bradenSensory","bradenMoisture","bradenActivity","bradenMobility","bradenNutrition","bradenFriction"];
+  const br=bradenIds.map(num);const braden=br.every(x=>x!==null)?br.reduce((a,b)=>a+b,0)+"/23":"No completado";
+  const inc=(num("oralIntake")||0)+(num("ivIntake")||0),out=(num("urine")||0)+(num("otherLoss")||0);
+  const sections=[
+   "VALORACIÓN DE ENFERMERÍA",
+   "Fecha: "+safe(value("date")),
+   "Paciente: "+safe(value("patient"))+" | DNI/HC: "+safe(value("document")),
+   "Edad: "+safe(value("age"))+" años | Sexo: "+safe(value("sex"))+" | Grupo: "+safe(value("group")),
+   "Ubicación: "+safe(value("bed"))+" | Institución: "+safe(value("institution")),
+   "",
+   "MOTIVO Y ANTECEDENTES",
+   "Motivo: "+safe(value("reason")),
+   "Antecedentes / alergias: "+safe(value("history")),
+   "",
+   "ANTROPOMETRÍA",
+   "Peso: "+safe(value("weight"))+" kg | Talla: "+safe(value("height"))+" cm | IMC: "+$("bmiResult").textContent,
+   "Perímetro abdominal: "+safe(value("waist"))+" cm | Cefálico: "+safe(value("head"))+" cm",
+   "",
+   "SIGNOS VITALES",
+   "Temperatura: "+safe(value("temperature"))+" °C | FC: "+safe(value("hr"))+" lpm | FR: "+safe(value("rr"))+" rpm",
+   "PA: "+safe(value("systolic"))+"/"+safe(value("diastolic"))+" mmHg | SpO₂: "+safe(value("spo2"))+"% | Glucemia: "+safe(value("glucose"))+" mg/dL",
+   "Oxígeno: "+safe(value("oxygen")),
+   "Observaciones automáticas: "+$("vitalResult").textContent,
+   "",
+   "NEUROLÓGICO",
+   "Conciencia: "+safe(value("conscious"))+" | Orientación: "+safe(value("orientation")),
+   "Pupilas: "+safe(value("pupils"))+" | Respuesta motora: "+safe(value("motor")),
+   "Glasgow: "+glasgow,
+   "",
+   "RESPIRATORIO",
+   "Patrón: "+safe(value("breathing"))+" | Ruidos: "+safe(value("breathSounds"))+" | Tos/secreciones: "+safe(value("cough"))+" | Cianosis: "+safe(value("cyanosis")),
+   "Observaciones: "+safe(value("respNotes")),
+   "",
+   "CARDIOVASCULAR",
+   "Pulso: "+safe(value("pulse"))+" | Relleno capilar: "+safe(value("capillary"))+" | Edema: "+safe(value("edema"))+" | Piel: "+safe(value("skinColor")),
+   "Observaciones: "+safe(value("cardioNotes")),
+   "",
+   "BALANCE Y ELIMINACIÓN",
+   "Ingresos: "+inc+" mL | Egresos: "+out+" mL | Balance: "+(inc-out)+" mL (período a consignar)",
+   "Orina: "+safe(value("urineAspect"))+" | Evacuación: "+safe(value("bowel")),
+   "Otros: "+safe(value("eliminationNotes")),
+   "",
+   "NUTRICIÓN Y DOLOR",
+   "Dieta: "+safe(value("diet"))+" | Apetito/tolerancia: "+safe(value("appetite")),
+   "Dolor EVA: "+safe(value("pain"))+"/10 | Localización: "+safe(value("painSite"))+" | "+$("painResult").textContent,
+   "Características: "+safe(value("painNotes")),
+   "",
+   "PIEL Y RIESGOS",
+   "Piel: "+safe(value("skin"))+" | Heridas: "+safe(value("wound"))+" | Detalle: "+safe(value("woundNotes")),
+   "Braden: "+braden,
+   "Movilidad: "+safe(value("mobility"))+" | Ayuda técnica: "+safe(value("aid")),
+   "Factores de caída: "+checkedText(".fallfactor"),
+   "",
+   "MEDICACIÓN",
+   dynamicText("medications","data-med",["name","dose"]),
+   "",
+   "LABORATORIO / ESTUDIOS",
+   dynamicText("labs","data-lab",["name","result","ref"]),
+   "",
+   "EVOLUCIÓN Y PLAN",
+   "Evolución: "+safe(value("evolution")),
+   "Cuidados / intervenciones: "+safe(value("carePlan")),
+   "Responsable: "+safe(value("professional")),
+   "",
+   "Registro de apoyo. Interpretar los datos con criterio profesional y protocolos vigentes."
+  ];
+  $("report").textContent=sections.join("\n");
+  $("reportSection").scrollIntoView({behavior:"smooth",block:"start"});
+  return $("report").textContent;
+ }
+ $("generateBtn").addEventListener("click",makeReport);
+ async function copyReport(){
+  const text=makeReport();
+  try{await navigator.clipboard.writeText(text);alert("Informe copiado.");}
+  catch(e){
+   const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+   try{document.execCommand("copy");alert("Informe copiado.");}catch(err){alert("No se pudo copiar automáticamente. Seleccione el texto del informe y cópielo.");}
+   ta.remove();
+  }
+ }
+ $("copyBtn").addEventListener("click",copyReport);
+ $("whatsappBtn").addEventListener("click",()=>{
+  const text=makeReport();
+  const url="https://wa.me/?text="+encodeURIComponent(text);
+  window.location.href=url;
+ });
+ $("resetBtn").addEventListener("click",()=>{
+  if(!confirm("¿Desea borrar todos los datos del formulario?"))return;
+  document.querySelectorAll("input,textarea").forEach(el=>{if(el.type==="checkbox"||el.type==="radio")el.checked=false;else el.value="";});
+  document.querySelectorAll("select").forEach(el=>el.selectedIndex=0);
+  $("date").value=nowLocal();
+  $("medications").innerHTML="";$("labs").innerHTML="";
+  addDynamic("medications","med");addDynamic("labs","lab");
+  $("report").textContent='Complete los datos y presione “Generar informe”.';
+  calculateBMI();calculateVitals();calculateGlasgow();calculateBalance();calculatePain();calculateBraden();calculateFalls();
+  window.scrollTo({top:0,behavior:"smooth"});
+ });
+})();
+</script>
+</body>
+</html>
